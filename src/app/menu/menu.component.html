@@ -1,0 +1,127 @@
+<div class="choix container my-4 p-4 bg-light rounded shadow-sm">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="input-group">
+                <select id="firstSelect" class="custom-select" (change)="onFirstSelectChange($event)">
+                    <option value="CNSS">CNSS</option>
+                    <option value="CNAM">CNAM</option>
+                    <option value="CNRPS">CNRPS</option>
+                    <option value="ONFP">ONFP</option>
+                    <option value="ONAS">ONAS</option>
+                </select>
+                <button type="button" class="btn-brillant ms-2" (click)="toggleAddFournisseurForm()">+</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="input-group">
+                <select id="secondSelect" class="custom-select" (change)="onSecondSelectChange($event)">
+                    <option *ngFor="let option of secondOptions" [value]="option">{{ option }}</option>
+                </select>
+                <button type="button" class="btn-brillant ms-2" (click)="toggleAddApiForm()">+</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
+  <!-- Les formulaires popup s'affichent en dehors du composant principal -->
+  <div class="popup-container" *ngIf="showAddFournisseurForm || showAddApiForm || showAddPatindaForm">
+    <div *ngIf="showAddFournisseurForm" class="popup-form card p-4 shadow-lg">
+      <h3 class="card-title text-center text-brillant">Ajouter un fournisseur</h3>
+      <form (ngSubmit)="onSubmitFournisseur()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Nom du Fournisseur *</label>
+          <input type="text" id="name" class="form-control custom-input" placeholder="Ex : CNSS, CNAM, ONFP" required>
+        </div>
+        <div class="mb-3">
+          <label for="type" class="form-label">Type du fournisseur *</label>
+          <select class="form-select custom-input">
+            <option value="">-- Sélectionnez le type --</option>
+            <option value="organisme_public">Organisme Public</option>
+            <option value="organisme_prive">Organisme Privé</option>
+            <option value="association">Association</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="identifiant">Identifiant Fournisseur *</label>
+          <input type="text" id="identifiant" name="identifiant" class="form-control custom-input" placeholder="Ex : Numéro unique ou code fournisseur" required>
+        </div>
+        <div class="mb-3">
+          <label for="telephone">Téléphone</label>
+          <input type="tel" id="telephone" name="telephone" class="form-control custom-input" placeholder="Ex : +216 71 123 456">
+        </div>
+        <div class="mb-3">
+          <label for="adresse">Adresse</label>
+          <textarea id="adresse" name="adresse" rows="3" class="form-control custom-input" placeholder="Ex : 12, Rue des Services, Tunis"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" class="form-control custom-input" placeholder="Ex : contact@fournisseur.com">
+        </div>
+        <div class="mb-3">
+          <label for="website">Site Web :</label>
+          <input type="url" id="website" name="website" class="form-control custom-input" placeholder="https://exemple.com">
+        </div>
+        <button type="submit" class="btn btn-success btn-brillant">Ajouter</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+      </form>
+    </div>
+  
+    <div *ngIf="showAddApiForm" class="popup-form card p-4 shadow-lg">
+      <h3 class="card-title text-center text-brillant">Ajouter une API</h3>
+      <form (ngSubmit)="onSubmitApi()">
+        <div class="mb-3">
+          <label for="apiName" class="form-label">Nom de l'API</label>
+          <input type="text" id="apiName" class="form-control custom-input" [(ngModel)]="api.name" name="apiName" required>
+        </div>
+        <div class="mb-3">
+          <label for="apiUrl" class="form-label">URL de l'API :</label>
+          <input type="url" id="apiUrl" name="apiUrl" placeholder="https://api.cnam.tn/v1/data" class="form-control custom-input" required>
+        </div>
+        <div class="mb-3">
+          <label for="authKey" class="form-label">Clé d'authentification (si nécessaire) :</label>
+          <input type="text" id="authKey" name="authKey" placeholder="Clé ou jeton API" class="form-control custom-input">
+        </div>
+        <div class="mb-3">
+          <label for="apiDescription" class="form-label">Description</label>
+          <input type="text" id="apiDescription" class="form-control custom-input" [(ngModel)]="api.description" name="apiDescription" required>
+        </div>
+        <div class="mb-3">
+          <label for="apiEndpoint" class="form-label">Endpoint</label>
+          <input type="text" id="apiEndpoint" class="form-control custom-input" [(ngModel)]="api.endpoint" name="apiEndpoint" required>
+        </div>
+        <div class="mb-3">
+          <label for="apiProvider" class="form-label">Fournisseur</label>
+          <select id="apiProvider" class="form-select custom-input">
+            <option value="CNSS">CNSS</option>
+            <option value="CNAM">CNAM</option>
+            <option value="CNRPS">CNRPS</option>
+            <option value="ONFP">ONFP</option>
+            <option value="ONAS">ONAS</option>
+          </select><br>
+          <button type="button" class="btn btn-brillant ms-2" (click)="toggleAddFournisseurForm()" >Ajouter Fournisseur</button><br><br>
+        </div>
+        <button type="submit" class="btn btn-success btn-brillant">Ajouter</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+      </form>
+    </div>
+  
+    <div *ngIf="showAddPatindaForm" class="popup-form card p-4 shadow-lg">
+      <form (ngSubmit)="onSubmitPatinda()">
+        <h3 class="card-title text-center text-brillant" style="background-position: center;">Ajouter Patinda</h3>
+
+        <div class="mb-3">
+          <label for="patindaName" class="form-label">Nom :</label>
+          <input type="text" id="patindaName" class="form-control custom-input" [(ngModel)]="patinda.name" name="patindaName" required>
+        </div>
+        <div class="mb-3">
+          <label for="patindaCode" class="form-label">Code :</label>
+          <input type="text" id="patindaCode" class="form-control custom-input" [(ngModel)]="patinda.code" name="patindaCode" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-brillant">Entrer</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+      </form>
+    </div>
+  </div>
+  
